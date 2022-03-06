@@ -14,8 +14,10 @@ export const InputContainer = styled.div<InputContainerProps>`
 			margin-bottom: 8px;
 		}
 	}
-	input {
+	.input-wrapper {
 		position: relative;
+	}
+	input {
 		width: 100%;
 		height: 46px;
 		padding: ${({ iconExist }) => (iconExist ? '0 44px 0 11px ' : '0 11px')};
@@ -33,7 +35,8 @@ export const InputContainer = styled.div<InputContainerProps>`
 	svg {
 		position: absolute;
 		right: 11px;
-		bottom: 17px;
+		top: 50%;
+		transform: translateY(-50%);
 	}
 	.input-error-message {
 		margin-top: 8px;
