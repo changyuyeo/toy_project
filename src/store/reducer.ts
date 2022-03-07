@@ -2,12 +2,14 @@ import { AnyAction, CombinedState, combineReducers } from 'redux'
 import { HYDRATE } from 'next-redux-wrapper'
 
 import { CommonState, UserState } from '@typings/reduxState'
+import authSlice, { AuthState } from '@store/auth'
 import userSlice from '@store/user'
 import commonSlice from '@store/common'
 
 export interface State {
-	user: UserState
+	auth: AuthState
 	common: CommonState
+	user: UserState
 }
 
 const rootReducer = (
@@ -19,8 +21,9 @@ const rootReducer = (
 			return action.payload
 		default: {
 			const combineReducer = combineReducers({
-				user: userSlice,
-				common: commonSlice
+				auth: authSlice,
+				common: commonSlice,
+				user: userSlice
 			})
 			return combineReducer(state, action)
 		}

@@ -1,22 +1,20 @@
-import { FC, FormEvent, useCallback, useMemo, useState } from 'react'
+import { FC, FormEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import {
-	ClosedEyeIcon,
-	MailIcon,
-	OpenedEyeIcon,
-	PersonIcon
-} from '@assets/svg/auth'
+import * as authIcon from '@assets/svg/auth'
 import { CloseXIcon } from '@assets/svg/modal'
-import useInput from '@hooks/useInput'
-import useValidateMode from '@hooks/useValidateMode'
-import { dayList, monthList, yearList } from '@lib/staticData'
-import { signUpAction } from '@store/user/actions'
 import Input from '@components/common/Input'
 import Selector from '@components/common/Selector'
 import Button from '@components/common/Button'
+import PasswordWarning from '@components/auth/PasswordWarning'
+import useInput from '@hooks/useInput'
+import useValidateMode from '@hooks/useValidateMode'
+import { dayList, monthList, yearList } from '@lib/staticData'
+import { setAuthMode } from '@store/auth'
+import { signUpAction } from '@store/user/actions'
 import { Container } from './styles'
-import PasswordWarning from '../PasswordWarning'
+
+const { ClosedEyeIcon, MailIcon, OpenedEyeIcon, PersonIcon } = authIcon
 
 interface SignUpModalProps {
 	onCloseModal: () => void
@@ -26,6 +24,7 @@ const PASSWORD_MIN_LENGTH = 8 as const
 
 const SignUpModal: FC<SignUpModalProps> = ({ onCloseModal }) => {
 	const dispatch = useDispatch()
+
 	const { onChangeValidateMode } = useValidateMode()
 
 	const [email, onChangeEamil] = useInput('')
@@ -39,12 +38,23 @@ const SignUpModal: FC<SignUpModalProps> = ({ onCloseModal }) => {
 	const [hidePassword, setHidePassword] = useState(true)
 	const [passwordFocused, setPasswordFocused] = useState(false)
 
+	useEffect(() => {
+		return () => {
+			onChangeValidateMode(false)
+		}
+	}, [onChangeValidateMode])
+
 	const onToggleHidePasswoed = useCallback(
 		() => setHidePassword(prev => !prev),
 		[]
 	)
 
 	const onFocusPassword = useCallback(() => setPasswordFocused(true), [])
+
+	const onChangeToLoginModal = useCallback(
+		() => dispatch(setAuthMode('login')),
+		[dispatch]
+	)
 
 	//* input validate
 	const isPasswordHasNameOrEmail = useMemo(
@@ -62,6 +72,7 @@ const SignUpModal: FC<SignUpModalProps> = ({ onCloseModal }) => {
 		[password]
 	)
 
+	//* password validate
 	const isPasswordHasNumberOrSymbol = useMemo(
 		() =>
 			!(
@@ -82,18 +93,49 @@ const SignUpModal: FC<SignUpModalProps> = ({ onCloseModal }) => {
 		[birthDay, birthMonth, birthYear]
 	)
 
+	const validateSignUpForm = useMemo(
+		() =>
+			!email ||
+			!lastname ||
+			!firstname ||
+			!password ||
+			isPasswordHasNameOrEmail ||
+			!isPasswordOverMinLength ||
+			isPasswordHasNumberOrSymbol ||
+			!birthDay ||
+			!birthMonth ||
+			!birthYear
+				? false
+				: true,
+		[
+			birthDay,
+			birthMonth,
+			birthYear,
+			email,
+			firstname,
+			isPasswordHasNameOrEmail,
+			isPasswordHasNumberOrSymbol,
+			isPasswordOverMinLength,
+			lastname,
+			password
+		]
+	)
+
 	const onSubmitSignUp = useCallback(
 		async (e: FormEvent<HTMLFormElement>) => {
 			e.preventDefault()
 			onChangeValidateMode(true)
-			const userData = {
-				email,
-				lastname,
-				firstname,
-				password,
-				birthday
+			if (validateSignUpForm) {
+				const signUpBody = {
+					email,
+					lastname,
+					firstname,
+					password,
+					birthday
+				}
+				dispatch(signUpAction(signUpBody))
+				onCloseModal()
 			}
-			dispatch(signUpAction(userData))
 		},
 		[
 			birthday,
@@ -102,7 +144,9 @@ const SignUpModal: FC<SignUpModalProps> = ({ onCloseModal }) => {
 			firstname,
 			lastname,
 			onChangeValidateMode,
-			password
+			onCloseModal,
+			password,
+			validateSignUpForm
 		]
 	)
 
@@ -162,7 +206,7 @@ const SignUpModal: FC<SignUpModalProps> = ({ onCloseModal }) => {
 						isPasswordOverMinLength &&
 						!isPasswordHasNumberOrSymbol
 					}
-					errorMessage="비밀번호는 필수입니다!"
+					errorMessage="올바른 비밀번호가 아닙니다!"
 					onFocus={onFocusPassword}
 				/>
 			</div>
@@ -192,6 +236,7 @@ const SignUpModal: FC<SignUpModalProps> = ({ onCloseModal }) => {
 						defaultValue="월"
 						value={birthMonth}
 						onChange={onChangeBirthMonth}
+						isValid={!!birthMonth}
 					/>
 				</div>
 				<div className="sign-up-modal-birthday-day-selector">
@@ -201,6 +246,7 @@ const SignUpModal: FC<SignUpModalProps> = ({ onCloseModal }) => {
 						defaultValue="일"
 						value={birthDay}
 						onChange={onChangeBirthDay}
+						isValid={!!birthDay}
 					/>
 				</div>
 				<div className="sign-up-modal-birthday-year-selector">
@@ -210,12 +256,23 @@ const SignUpModal: FC<SignUpModalProps> = ({ onCloseModal }) => {
 						defaultValue="년"
 						value={birthYear}
 						onChange={onChangeBirthYear}
+						isValid={!!birthYear}
 					/>
 				</div>
 			</div>
 			<div className="sign-up-modal-submit-button-wrapper">
 				<Button type="submit">가입하기</Button>
 			</div>
+			<p>
+				이미 에어비앤비 계정이 있나요?
+				<span
+					className="sign-up-modal-set-login"
+					role="presentation"
+					onClick={onChangeToLoginModal}
+				>
+					로그인
+				</span>
+			</p>
 		</Container>
 	)
 }

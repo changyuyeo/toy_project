@@ -1,7 +1,7 @@
-import Axios from 'axios'
+import axios from 'axios'
 
 const instance = (url: string) =>
-	Axios.create({
+	axios.create({
 		baseURL: `${process.env.NEXT_PUBLIC_API_URL}/${url}`,
 		withCredentials: true
 	})
