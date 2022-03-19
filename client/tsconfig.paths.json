@@ -6,7 +6,9 @@
 			"@components/*": ["./src/components/*"],
 			"@hooks/*": ["./src/hooks/*"],
 			"@layouts/*": ["./src/layouts/*"],
+			"@lib/*": ["./src/lib/*"],
 			"@pages/*": ["./src/pages/*"],
+			"@stories/*": ["./src/stories/*"],
 			"@styles/*": ["./src/styles/*"],
 			"@src/*": ["./src/*"]
 		}

@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"description": "test",
 	"main": "index.js",
-	"repository": "https://github.com/changyuyeo/airbnb-clone-client.git",
+	"repository": "https://github.com/changyuyeo/toy_project",
 	"author": "changyuyeo <wry5533@gmail.com>",
 	"license": "MIT",
 	"private": true,

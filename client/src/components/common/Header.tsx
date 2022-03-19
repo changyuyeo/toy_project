@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { LogoIcon } from '@assets/svg'
+import { LogoIcon } from '@assets/svg/common'
 import SignUpModal from '@components/auth/SignUpModal'
 import { HeaderContainer } from '@components/common/Header.styles'
 import useModal from '@hooks/useModal'
@@ -23,7 +23,7 @@ const Header = () => {
 				<button type="button">로그인</button>
 			</div>
 			<ModalPortal>
-				<SignUpModal />
+				<SignUpModal onCloseModal={onCloseModal} />
 			</ModalPortal>
 		</HeaderContainer>
 	)
