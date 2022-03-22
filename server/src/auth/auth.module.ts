@@ -1,14 +1,17 @@
 import { forwardRef, Module } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import { MongooseModule } from '@nestjs/mongoose'
 import { PassportModule } from '@nestjs/passport'
 
+import { JwtStrategy } from '@auth/jwt/jwt.strategy'
 import { AuthService } from '@auth/auth.service'
 import { UsersModule } from '@users/users.module'
 import { User, UserSchema } from '@users/users.schema'
 
 @Module({
 	imports: [
+		ConfigModule.forRoot(),
 		MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
 		PassportModule.register({ defaultStrategy: 'jwt', session: false }),
 		JwtModule.register({
@@ -17,7 +20,7 @@ import { User, UserSchema } from '@users/users.schema'
 		}),
 		forwardRef(() => UsersModule) //* 순환 참조 모듈 설정
 	],
-	providers: [AuthService],
+	providers: [AuthService, JwtStrategy],
 	exports: [AuthService]
 })
 export class AuthModule {}

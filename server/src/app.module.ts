@@ -10,7 +10,7 @@ import { UsersModule } from '@users/users.module'
 
 @Module({
 	imports: [
-		ConfigModule.forRoot({ isGlobal: true }),
+		ConfigModule.forRoot(),
 		MongooseModule.forRoot(process.env.MONGODB_URI),
 		UsersModule,
 		AuthModule
