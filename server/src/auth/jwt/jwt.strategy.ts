@@ -19,9 +19,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
 	//* jwt 인증 부분, 인증 성공 시 유저 정보 리턴
 	async validate(payload: IPayload) {
-		const user = await this.userModel.findById(payload.sub).select('-password')
+		try {
+			const user = await this.userModel
+				.findById(payload.sub)
+				.select('-password')
 
-		if (user) return user
-		else throw new UnauthorizedException()
+			if (user) return user
+			else throw new UnauthorizedException('해당하는 유저는 없습니다.')
+		} catch (error) {
+			throw new UnauthorizedException(error)
+		}
 	}
 }
