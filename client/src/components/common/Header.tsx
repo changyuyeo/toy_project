@@ -2,8 +2,8 @@ import Link from 'next/link'
 
 import { LogoIcon } from '@assets/svg/common'
 import SignUpModal from '@components/auth/SignUpModal'
-import { HeaderContainer } from '@components/common/Header.styles'
 import useModal from '@hooks/useModal'
+import { HeaderContainer } from './Header.styled'
 
 const Header = () => {
 	const { ModalPortal, onCloseModal, onOpenModal } = useModal()

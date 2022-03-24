@@ -8,8 +8,10 @@
 			"@layouts/*": ["./src/layouts/*"],
 			"@lib/*": ["./src/lib/*"],
 			"@pages/*": ["./src/pages/*"],
+			"@store/*": ["./src/store/*"],
 			"@stories/*": ["./src/stories/*"],
 			"@styles/*": ["./src/styles/*"],
+			"@typings/*": ["./src/typings/*"],
 			"@src/*": ["./src/*"]
 		}
 	}
