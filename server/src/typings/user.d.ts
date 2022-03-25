@@ -8,4 +8,6 @@ export interface IUser {
 	id: string
 	email: string
 	nickname: string
+	birthday: string
+	imgUrl: string
 }

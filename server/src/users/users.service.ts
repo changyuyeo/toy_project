@@ -21,7 +21,7 @@ export class UsersService {
 
 	//* 회원가입 service
 	async signUp(body: UserRequestDto) {
-		const { email, nickname, password } = body
+		const { email, nickname, password, birthday } = body
 		const isUserExist = await Promise.all([
 			this.userModel.findOne({ email }),
 			this.userModel.findOne({ nickname })
@@ -46,7 +46,7 @@ export class UsersService {
 		}
 
 		const hashedPassword = await bcrypt.hash(password, 10)
-		const newUserData = { email, nickname, password: hashedPassword }
+		const newUserData = { email, nickname, password: hashedPassword, birthday }
 		const newUser = await this.userModel.create(newUserData)
 
 		return newUser.readOnlyData

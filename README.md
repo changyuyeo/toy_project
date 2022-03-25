@@ -11,3 +11,36 @@
 | chore    | 빌드 업무, 패키지 매니저 수정 |
 | docs     | 문서 수정                     |
 | style    | 코드 formatting               |
+
+## ⚙ settings
+
+settings.json
+
+```json
+  "workbench.iconTheme": "material-icon-theme",
+  "material-icon-theme.activeIconPack": "nest",
+```
+
+node -v
+
+```
+v16.13.1
+```
+
+.env
+
+```
+// client
+NEXT_PUBLIC_API_URL=...
+
+// server
+MONGODB_URI=...
+
+PORT=...
+ORIGIN=...
+SERVER_URI=...
+
+MODE=...
+
+JWT_SECRET=...
+```

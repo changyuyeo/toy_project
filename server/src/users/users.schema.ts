@@ -23,6 +23,14 @@ export class User extends Document {
 	@Prop({ required: true })
 	password: string
 
+	@IsString()
+	@IsNotEmpty()
+	@Prop({ required: true })
+	birthday: string
+
+	@Prop({ default: 'default' })
+	imgUrl: string
+
 	readonly readOnlyData: IUser
 }
 
@@ -32,6 +40,8 @@ UserSchema.virtual('readOnlyData').get(function (this: User) {
 	return {
 		id: this.id,
 		email: this.email,
-		nickname: this.nickname
+		nickname: this.nickname,
+		birthday: this.birthday,
+		imgUrl: this.imgUrl
 	}
 })
