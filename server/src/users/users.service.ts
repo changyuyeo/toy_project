@@ -1,15 +1,22 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import {
+	BadRequestException,
+	Injectable,
+	UnauthorizedException
+} from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
+import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt'
 import { Model } from 'mongoose'
 
-import { UserRequestDto } from '@users/dto/users.request.dto'
+import { LoginRequestDto } from '@users/dto/login.request.dto'
+import { SignUpRequestDto } from '@users/dto/signup.request.dto'
 import { User } from '@users/users.schema'
 
 @Injectable()
 export class UsersService {
 	constructor(
-		@InjectModel(User.name) private readonly userModel: Model<User>
+		@InjectModel(User.name) private readonly userModel: Model<User>,
+		private jwtService: JwtService
 	) {}
 
 	//* 모든 유저 조회 service
@@ -20,7 +27,7 @@ export class UsersService {
 	}
 
 	//* 회원가입 service
-	async signUp(body: UserRequestDto) {
+	async signUp(body: SignUpRequestDto) {
 		const { email, nickname, password, birthday } = body
 		const isUserExist = await Promise.all([
 			this.userModel.findOne({ email }),
@@ -49,6 +56,44 @@ export class UsersService {
 		const newUserData = { email, nickname, password: hashedPassword, birthday }
 		const newUser = await this.userModel.create(newUserData)
 
-		return newUser.readOnlyData
+		//* token 발급
+		try {
+			const token = await this.jwtService.signAsync(
+				{ sub: newUser.id },
+				{ secret: process.env.JWT_SECRET }
+			)
+			return { access_token: token, user: newUser.readOnlyData }
+		} catch (error) {
+			throw new BadRequestException(error.message)
+		}
+	}
+
+	//* 로그인 service
+	async jwtLogIn(data: LoginRequestDto) {
+		const { email, password } = data
+
+		//* email 검사
+		const user = await this.userModel.findOne({ email })
+		if (!user)
+			throw new UnauthorizedException('이메일과 비밀번호를 확인해주세요.')
+
+		//* password 검사
+		const isPasswordValidated: boolean = await bcrypt.compare(
+			password,
+			user.password
+		)
+		if (!isPasswordValidated)
+			throw new UnauthorizedException('이메일과 비밀번호를 확인해주세요.')
+
+		//* token 발급
+		try {
+			const token = await this.jwtService.signAsync(
+				{ sub: user.id },
+				{ secret: process.env.JWT_SECRET }
+			)
+			return { access_token: token, user: user.readOnlyData }
+		} catch (error) {
+			throw new BadRequestException(error.message)
+		}
 	}
 }

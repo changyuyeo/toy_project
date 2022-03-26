@@ -5,15 +5,13 @@ import mongoose from 'mongoose'
 
 import { AppController } from '@src/app.controller'
 import { AppService } from '@src/app.service'
-import { AuthModule } from '@auth/auth.module'
 import { UsersModule } from '@users/users.module'
 
 @Module({
 	imports: [
 		ConfigModule.forRoot(),
 		MongooseModule.forRoot(process.env.MONGODB_URI),
-		UsersModule,
-		AuthModule
+		UsersModule
 	],
 	controllers: [AppController],
 	providers: [AppService]

@@ -9,21 +9,17 @@ import {
 } from '@nestjs/common'
 import { Response } from 'express'
 
-import { LoginRequestDto } from '@auth/dto/login.request.dto'
-import { JwtAuthGuard } from '@auth/jwt/jwt.guard'
-import { AuthService } from '@auth/auth.service'
+import { LoginRequestDto } from '@users/dto/login.request.dto'
+import { JwtAuthGuard } from '@users/jwt/jwt.guard'
 import { OnlyPrivateInterceptor } from '@common/interceptors/only-private.interceptor'
-import { UserRequestDto } from '@users/dto/users.request.dto'
+import { SignUpRequestDto } from '@users/dto/signup.request.dto'
 import { CurrentUser } from '@users/decorators/user.decorator'
 import { User } from '@users/users.schema'
 import { UsersService } from '@users/users.service'
 
 @Controller('users')
 export class UsersController {
-	constructor(
-		private readonly usersService: UsersService,
-		private readonly authService: AuthService
-	) {}
+	constructor(private readonly usersService: UsersService) {}
 
 	//* 현재 회원 정보 조회 api
 	@Get('me')
@@ -41,8 +37,13 @@ export class UsersController {
 
 	//* 회원가입 api
 	@Post('signup')
-	async signup(@Body() body: UserRequestDto) {
-		return await this.usersService.signUp(body)
+	async signup(
+		@Body() body: SignUpRequestDto,
+		@Res({ passthrough: true }) response: Response
+	) {
+		const { access_token, user } = await this.usersService.signUp(body)
+		response.cookie('access_token', access_token, { httpOnly: true })
+		return user
 	}
 
 	//* 로그인 api
@@ -51,14 +52,14 @@ export class UsersController {
 		@Body() body: LoginRequestDto,
 		@Res({ passthrough: true }) response: Response
 	) {
-		const { access_token, user } = await this.authService.jwtLogIn(body)
-		response.cookie('jwt', access_token, { httpOnly: true })
+		const { access_token, user } = await this.usersService.jwtLogIn(body)
+		response.cookie('access_token', access_token, { httpOnly: true })
 		return user
 	}
 
 	//* 로그아웃 api
 	@Post('logout')
 	async logOut(@Res({ passthrough: true }) response: Response) {
-		response.clearCookie('jwt')
+		response.clearCookie('access_token')
 	}
 }

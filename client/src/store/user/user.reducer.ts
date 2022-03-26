@@ -1,7 +1,7 @@
 import produce from 'immer'
 
 import * as actions from '@store/user/user.types'
-import { IUserState } from '@typings/users'
+import { IUserState } from '@typings/reduxState'
 import { UserActionType } from './user.actions'
 
 const initialState: IUserState = {
@@ -32,6 +32,7 @@ const userReducers = (state = initialState, action: UserActionType) =>
 			case actions.SIGN_UP_SUCCESS:
 				draft.signUpLoading = false
 				draft.signUpDone = true
+				draft.myData = action.data
 				break
 			case actions.SIGN_UP_FAILURE:
 				draft.signUpLoading = false

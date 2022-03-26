@@ -9,12 +9,12 @@ import {
 type ElementType = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
 type InputEventType = ChangeEvent<ElementType>
 type RetrunTypes<T> = [
-	T | undefined,
+	T,
 	(e: InputEventType) => void,
-	Dispatch<SetStateAction<T | undefined>>
+	Dispatch<SetStateAction<T>>
 ]
 
-const useInput = <T = string>(initalData?: T): RetrunTypes<T> => {
+const useInput = <T = string>(initalData: T): RetrunTypes<T> => {
 	const [value, setValue] = useState(initalData)
 	const onChangeValue = useCallback(
 		(e: InputEventType) => setValue(e.target.value as unknown as T),

@@ -22,15 +22,15 @@ const SignUpForm = () => {
 	const [email, onChangeEmail] = useInput('')
 	const [nickname, onChangeNickname] = useInput('')
 	const [password, onChangePassword] = useInput('')
-	const [month, onChangeMonth] = useInput<string | undefined>()
-	const [day, onChangeDay] = useInput<string | undefined>()
-	const [year, onChangeYear] = useInput<string | undefined>()
+	const [month, onChangeMonth] = useInput<string | undefined>(undefined)
+	const [day, onChangeDay] = useInput<string | undefined>(undefined)
+	const [year, onChangeYear] = useInput<string | undefined>(undefined)
 
 	const [hidePassword, onToggleHidePassword] = useToggle(true)
 
 	const onSubmitSignUp = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
-		if (email && nickname && password && year && month && day) {
+		if (year && month && day) {
 			const birthday = new Date(
 				`${year.replace('년', '-')}${month.replace('월', '-')}${day.replace(
 					'일',

@@ -1,4 +1,4 @@
-import { ISignUpAPIBody } from '@typings/users'
+import { ISignUpAPIBody, IUser } from '@typings/users'
 import * as actions from '@store/user/user.types'
 
 //* 회원가입
@@ -7,7 +7,10 @@ export const signUpRequest = (data: ISignUpAPIBody) => ({
 	data
 })
 
-export const signUpSuccess = () => ({ type: actions.SIGN_UP_SUCCESS })
+export const signUpSuccess = (data: IUser) => ({
+	type: actions.SIGN_UP_SUCCESS,
+	data
+})
 
 export const signUpFailure = (error: string) => ({
 	type: actions.SIGN_UP_FAILURE,
