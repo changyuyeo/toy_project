@@ -1,4 +1,4 @@
-import { FormEvent } from 'react'
+import { FormEvent, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 
 import {
@@ -10,11 +10,12 @@ import {
 import useInput from '@hooks/useInput'
 import useToggle from '@hooks/useToggle'
 import { monthList, dayList, yearList } from '@lib/staticData'
-import { signUpRequest } from '@store/user/user.actions'
 import Button from '@stories/Button'
 import Input from '@stories/Input'
 import Selector from '@stories/Selector'
+import { signUpRequest } from '@store/user/user.actions'
 import { SignUpFormContainer } from './SignUpForm.styled'
+import useValidateMode from '@hooks/useValidateMode'
 
 const SignUpForm = () => {
 	const dispatch = useDispatch()
@@ -28,19 +29,41 @@ const SignUpForm = () => {
 
 	const [hidePassword, onToggleHidePassword] = useToggle(true)
 
+	const { setValidateMode } = useValidateMode()
+
+	//* password toggle icon
+	const passwordIcon = useMemo(
+		() =>
+			hidePassword ? (
+				<OpenedEyeIcon
+					onClick={onToggleHidePassword}
+					className="signup-input--cursor"
+				/>
+			) : (
+				<ClosedEyeIcon
+					onClick={onToggleHidePassword}
+					className="signup-input--cursor"
+				/>
+			),
+		[hidePassword, onToggleHidePassword]
+	)
+
 	const onSubmitSignUp = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
-		if (year && month && day) {
-			const birthday = new Date(
-				`${year.replace('년', '-')}${month.replace('월', '-')}${day.replace(
-					'일',
-					'-'
-				)}`
-			).toISOString()
+		setValidateMode(true)
 
-			const signUpBody = { email, nickname, password, birthday }
-			dispatch(signUpRequest(signUpBody))
-		}
+		//* 빈 값 검사
+		if (!email || !nickname || !password || !year || !month || !day) return null
+
+		const birthday = new Date(
+			`${year.replace('년', '-')}${month.replace('월', '-')}${day.replace(
+				'일',
+				'-'
+			)}`
+		).toISOString()
+
+		const signUpBody = { email, nickname, password, birthday }
+		dispatch(signUpRequest(signUpBody))
 	}
 
 	return (
@@ -53,6 +76,9 @@ const SignUpForm = () => {
 						icon={<MailIcon />}
 						value={email}
 						onChange={onChangeEmail}
+						useValidation
+						isValid={!!email}
+						errorMessage="이메일은 필수입니다."
 					/>
 				</div>
 				<div className="signup-input__wrapper">
@@ -62,27 +88,21 @@ const SignUpForm = () => {
 						icon={<PersonIcon />}
 						value={nickname}
 						onChange={onChangeNickname}
+						useValidation
+						isValid={!!nickname}
+						errorMessage="닉네임은 필수입니다."
 					/>
 				</div>
 				<div className="signup-input__wrapper">
 					<Input
 						type={hidePassword ? 'password' : 'text'}
 						placeholder="비밀번호 설정하기"
-						icon={
-							hidePassword ? (
-								<OpenedEyeIcon
-									onClick={onToggleHidePassword}
-									className="signup-input--cursor"
-								/>
-							) : (
-								<ClosedEyeIcon
-									onClick={onToggleHidePassword}
-									className="signup-input--cursor"
-								/>
-							)
-						}
+						icon={passwordIcon}
 						value={password}
 						onChange={onChangePassword}
+						useValidation
+						isValid={!!password}
+						errorMessage="비밀번호는 필수입니다."
 					/>
 				</div>
 			</div>

@@ -1,3 +1,7 @@
+export interface ICommonState {
+	validateMode: boolean
+}
+
 export interface IUserState {
 	loadMyInfoLoading: boolean
 	loadMyInfoDone: boolean
@@ -15,5 +19,6 @@ export interface IUserState {
 }
 
 export interface IState {
+	common: ICommonState
 	user: IUserState
 }

@@ -2,18 +2,22 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import { createWrapper } from 'next-redux-wrapper'
 import createSagaMiddleware from 'redux-saga'
 import { composeWithDevTools } from 'redux-devtools-extension'
+import {
+	TypedUseSelectorHook,
+	useSelector as useReduxSelector
+} from 'react-redux'
 
 import rootReducer, { RootReducerType } from '@store/rootReducer'
 import rootSaga from '@store/rootSaga'
 
+const isDev = process.env.NODE_ENV === 'development'
+
 const configureStore = () => {
 	const sagaMiddleware = createSagaMiddleware()
 	const middlewares = [sagaMiddleware]
-
-	const enhancer =
-		process.env.NODE_ENV === 'production'
-			? compose(applyMiddleware(...middlewares))
-			: composeWithDevTools(applyMiddleware(...middlewares))
+	const enhancer = !isDev
+		? compose(applyMiddleware(...middlewares))
+		: composeWithDevTools(applyMiddleware(...middlewares))
 
 	const store = createStore(rootReducer as RootReducerType, enhancer)
 	store.sagaTask = sagaMiddleware.run(rootSaga)
@@ -21,8 +25,8 @@ const configureStore = () => {
 	return store
 }
 
-const wrapper = createWrapper(configureStore, {
-	debug: process.env.NODE_ENV === 'development'
-})
+//* 타입지원 커스텀 useSelector
+type RootState = ReturnType<typeof rootReducer>
+export const useSelector: TypedUseSelectorHook<RootState> = useReduxSelector
 
-export default wrapper
+export const wrapper = createWrapper(configureStore, { debug: isDev })
