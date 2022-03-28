@@ -12,4 +12,7 @@ export const StyledButton = styled.button`
 	font-weight: 800;
 	outline: none;
 	cursor: pointer;
+	:disabled {
+		background-color: ${colors.gray_bb};
+	}
 `

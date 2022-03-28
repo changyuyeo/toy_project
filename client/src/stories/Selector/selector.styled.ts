@@ -1,7 +1,12 @@
+import styled, { css } from 'styled-components'
 import colors from '@styles/colors'
-import styled from 'styled-components'
 
-export const StyledSelector = styled.div`
+interface StyledSelectorProps {
+	isValid: boolean
+	validateMode: boolean
+}
+
+export const StyledSelector = styled.div<StyledSelectorProps>`
 	width: 100%;
 	height: 46px;
 
@@ -22,4 +27,13 @@ export const StyledSelector = styled.div`
 			border-color: ${colors.dark_cyan};
 		}
 	}
+
+	${({ isValid, validateMode }) =>
+		validateMode &&
+		css`
+			select {
+				border-color: ${isValid ? colors.dark_cyan : colors.tawny} !important;
+				background-color: ${isValid ? 'white' : colors.snow};
+			}
+		`}
 `

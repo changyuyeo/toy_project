@@ -1,5 +1,5 @@
-import colors from '@styles/colors'
 import styled, { css } from 'styled-components'
+import colors from '@styles/colors'
 
 interface StyledInputProps {
 	iconExist: boolean

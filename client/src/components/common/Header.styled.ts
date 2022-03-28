@@ -14,25 +14,6 @@ export const HeaderContainer = styled.div`
 	border-bottom: 1px solid ${colors.gray_e5};
 	z-index: 10;
 
-	.header-logo {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		transition: 500ms;
-		&__icon {
-			width: 35px;
-			fill: ${colors.main_pink};
-		}
-		&__text {
-			font-size: 25px;
-			font-weight: 600;
-			color: ${colors.main_pink};
-		}
-		&:hover {
-			filter: brightness(80%);
-		}
-	}
-
 	.header-auth__buttons {
 		display: flex;
 		align-items: center;

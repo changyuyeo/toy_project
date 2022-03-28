@@ -1,18 +1,26 @@
 import { FC, SelectHTMLAttributes } from 'react'
+
+import { useSelector } from '@store/index'
 import { StyledSelector } from './selector.styled'
 
 interface SelectorProps extends SelectHTMLAttributes<HTMLSelectElement> {
 	options?: string[]
 	disabledOption?: string
 	value?: string
+	isValid?: boolean
 }
 
-const SelectorComponent: FC<SelectorProps> = props => {
-	const { options = [], disabledOption = '', ...selectProps } = props
+const SelectorComponent: FC<SelectorProps> = ({
+	options = [],
+	disabledOption = '',
+	isValid,
+	...props
+}) => {
+	const { validateMode } = useSelector(state => state.common)
 
 	return (
-		<StyledSelector>
-			<select {...selectProps}>
+		<StyledSelector isValid={!!isValid} validateMode={validateMode}>
+			<select {...props}>
 				<option value={disabledOption} disabled>
 					{disabledOption}
 				</option>

@@ -1,8 +1,6 @@
-import Link from 'next/link'
-
-import { LogoIcon } from '@assets/svg/common'
 import SignUpModal from '@components/auth/SignUpModal'
 import useModal from '@hooks/useModal'
+import Logo from './Logo'
 import { HeaderContainer } from './Header.styled'
 
 const Header = () => {
@@ -10,12 +8,7 @@ const Header = () => {
 
 	return (
 		<HeaderContainer>
-			<Link href="/">
-				<a className="header-logo">
-					<LogoIcon className="header-logo__icon" />
-					<span className="header-logo__text">Changyu</span>
-				</a>
-			</Link>
+			<Logo />
 			<div className="header-auth__buttons">
 				<button type="button" onClick={onOpenModal}>
 					회원가입
