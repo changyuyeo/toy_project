@@ -1,4 +1,4 @@
-import { FormEvent, useMemo } from 'react'
+import { FC, FormEvent, useEffect, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 
 import {
@@ -24,7 +24,11 @@ import useFocus from '@hooks/useFocus'
 import PasswordWarning from './PasswordWarning'
 import { SignUpFormContainer } from './SignUpForm.styled'
 
-const SignUpForm = () => {
+interface Props {
+	onCloseModal: () => void
+}
+
+const SignUpForm: FC<Props> = ({ onCloseModal }) => {
 	const dispatch = useDispatch()
 
 	const [email, onChangeEmail] = useInput('')
@@ -158,8 +162,15 @@ const SignUpForm = () => {
 
 			const signUpBody = { email, nickname, password, birthday }
 			dispatch(signUpRequest(signUpBody))
+			onCloseModal()
 		}
 	}
+
+	useEffect(() => {
+		return () => {
+			setValidateMode(false)
+		}
+	}, [setValidateMode])
 
 	return (
 		<SignUpFormContainer onSubmit={onSubmitSignUp}>

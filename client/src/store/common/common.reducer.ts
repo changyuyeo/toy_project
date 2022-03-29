@@ -5,7 +5,8 @@ import { CommonActionType } from './common.actions'
 import * as actions from '@store/common/common.types'
 
 const initialState: ICommonState = {
-	validateMode: false
+	validateMode: false,
+	authMode: 'signup'
 }
 
 const commonReducers = (state = initialState, action: CommonActionType) =>
@@ -13,6 +14,9 @@ const commonReducers = (state = initialState, action: CommonActionType) =>
 		switch (action.type) {
 			case actions.SET_VAILDATE_MODE:
 				draft.validateMode = action.data
+				break
+			case actions.SET_AUTH_MODE:
+				draft.authMode = action.data
 				break
 			default:
 				break

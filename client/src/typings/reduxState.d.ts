@@ -1,5 +1,9 @@
+import { TAuthMode } from './common'
+import { IUser } from './users'
+
 export interface ICommonState {
 	validateMode: boolean
+	authMode: TAuthMode
 }
 
 export interface IUserState {

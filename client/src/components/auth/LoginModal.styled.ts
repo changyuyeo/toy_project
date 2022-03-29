@@ -1,7 +1,7 @@
-import colors from '@styles/colors'
 import styled from 'styled-components'
+import colors from '@styles/colors'
 
-export const SignUpModalContainer = styled.div`
+export const LoginModalContainer = styled.form`
 	width: 568px;
 	padding: 32px;
 	background-color: white;
@@ -13,7 +13,7 @@ export const SignUpModalContainer = styled.div`
 		margin: 0 0 40px auto;
 	}
 
-	.set-login {
+	.set-signup {
 		display: flex;
 		margin-top: 10px;
 		&__button {
