@@ -1,7 +1,10 @@
-export interface ISignUpAPIBody {
+export interface ILoginAPIBody {
 	email: string
-	nickname: string
 	password: string
+}
+
+export interface ISignUpAPIBody extends ILoginAPIBody {
+	nickname: string
 	birthday: string
 }
 
