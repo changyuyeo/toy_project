@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import colors from '@styles/colors'
 
-export const LoginModalContainer = styled.form`
+export const LoginModalContainer = styled.div`
 	width: 568px;
 	padding: 32px;
 	background-color: white;

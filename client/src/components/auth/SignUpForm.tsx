@@ -1,4 +1,4 @@
-import { FC, FormEvent, useEffect, useMemo } from 'react'
+import { FC, FormEvent, useCallback, useEffect, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 
 import {
@@ -19,16 +19,16 @@ import Button from '@stories/Button'
 import Input from '@stories/Input'
 import Selector from '@stories/Selector'
 import { signUpRequest } from '@store/user/user.actions'
-import useValidateMode from '@hooks/useValidateMode'
 import useFocus from '@hooks/useFocus'
 import PasswordWarning from './PasswordWarning'
 import { SignUpFormContainer } from './SignUpForm.styled'
 
 interface Props {
 	onCloseModal: () => void
+	setValidateMode: (value: boolean) => void
 }
 
-const SignUpForm: FC<Props> = ({ onCloseModal }) => {
+const SignUpForm: FC<Props> = ({ onCloseModal, setValidateMode }) => {
 	const dispatch = useDispatch()
 
 	const [email, onChangeEmail] = useInput('')
@@ -40,8 +40,6 @@ const SignUpForm: FC<Props> = ({ onCloseModal }) => {
 
 	const [hidePassword, onToggleHidePassword] = useToggle(true)
 	const [passwordFocused, onFocusPassword] = useFocus()
-
-	const { setValidateMode } = useValidateMode()
 
 	//* password toggle icon
 	const passwordIcon = useMemo(
@@ -148,23 +146,37 @@ const SignUpForm: FC<Props> = ({ onCloseModal }) => {
 	])
 
 	//* 회원가입
-	const onSubmitSignUp = (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault()
-		setValidateMode(true)
+	const onSubmitSignUp = useCallback(
+		(e: FormEvent<HTMLFormElement>) => {
+			e.preventDefault()
+			setValidateMode(true)
 
-		if (validateSignForm) {
-			const birthday = new Date(
-				`${year?.replace('년', '-')}${month?.replace('월', '-')}${day?.replace(
-					'일',
-					'-'
-				)}`
-			).toISOString()
+			if (validateSignForm) {
+				const birthday = new Date(
+					`${year?.replace('년', '-')}${month?.replace(
+						'월',
+						'-'
+					)}${day?.replace('일', '-')}`
+				).toISOString()
 
-			const signUpBody = { email, nickname, password, birthday }
-			dispatch(signUpRequest(signUpBody))
-			onCloseModal()
-		}
-	}
+				const signUpBody = { email, nickname, password, birthday }
+				dispatch(signUpRequest(signUpBody))
+				onCloseModal()
+			}
+		},
+		[
+			day,
+			dispatch,
+			email,
+			month,
+			nickname,
+			onCloseModal,
+			password,
+			setValidateMode,
+			validateSignForm,
+			year
+		]
+	)
 
 	useEffect(() => {
 		return () => {
@@ -254,9 +266,7 @@ const SignUpForm: FC<Props> = ({ onCloseModal }) => {
 				</div>
 			</div>
 			<div className="signup-button">
-				<Button type="submit" disabled={!validateSignForm}>
-					가입하기
-				</Button>
+				<Button type="submit">가입하기</Button>
 			</div>
 		</SignUpFormContainer>
 	)

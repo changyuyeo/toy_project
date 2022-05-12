@@ -1,13 +1,21 @@
-import { useMemo } from 'react'
+import { FC, FormEvent, useCallback, useEffect, useMemo } from 'react'
+import { useDispatch } from 'react-redux'
 
 import { ClosedEyeIcon, MailIcon, OpenedEyeIcon } from '@assets/svg/auth'
 import useInput from '@hooks/useInput'
 import useToggle from '@hooks/useToggle'
 import Button from '@stories/Button'
 import Input from '@stories/Input'
+import { logInRequest } from '@store/user/user.actions'
 import { LoginFormContainer } from './LoginForm.styled'
 
-const LoginForm = () => {
+interface Props {
+	setValidateMode: (value: boolean) => void
+}
+
+const LoginForm: FC<Props> = ({ setValidateMode }) => {
+	const dispatch = useDispatch()
+
 	const [email, onChangeEmail] = useInput('')
 	const [password, onChangePassword] = useInput('')
 
@@ -30,8 +38,28 @@ const LoginForm = () => {
 		[hidePassword, onToggleHidePassword]
 	)
 
+	//* 로그인
+	const onSubmitLogin = useCallback(
+		(e: FormEvent<HTMLFormElement>) => {
+			e.preventDefault()
+			setValidateMode(true)
+
+			if (email && password) {
+				const loginBody = { email, password }
+				dispatch(logInRequest(loginBody))
+			}
+		},
+		[dispatch, email, password, setValidateMode]
+	)
+
+	useEffect(() => {
+		return () => {
+			setValidateMode(false)
+		}
+	}, [setValidateMode])
+
 	return (
-		<LoginFormContainer>
+		<LoginFormContainer onSubmit={onSubmitLogin}>
 			<div className="login-input">
 				<div className="login-input__wrapper">
 					<Input
@@ -41,6 +69,9 @@ const LoginForm = () => {
 						icon={<MailIcon />}
 						value={email}
 						onChange={onChangeEmail}
+						useValidation
+						isValid={!!email}
+						errorMessage="이메일은 필수입니다."
 					/>
 				</div>
 				<div className="login-input__wrapper">
@@ -50,6 +81,9 @@ const LoginForm = () => {
 						icon={passwordIcon}
 						value={password}
 						onChange={onChangePassword}
+						useValidation
+						isValid={!!password}
+						errorMessage="비밀번호는 필수입니다."
 					/>
 				</div>
 			</div>

@@ -7,13 +7,21 @@ import { SignUpModalContainer } from './SignUpModal.styled'
 interface Props {
 	onCloseModal: () => void
 	onChangeLoginMode: () => void
+	setValidateMode: (value: boolean) => void
 }
 
-const SignUpModal: FC<Props> = ({ onCloseModal, onChangeLoginMode }) => {
+const SignUpModal: FC<Props> = ({
+	onCloseModal,
+	onChangeLoginMode,
+	setValidateMode
+}) => {
 	return (
 		<SignUpModalContainer>
 			<CloseIcon className="close-icon" onClick={onCloseModal} />
-			<SignUpForm onCloseModal={onCloseModal} />
+			<SignUpForm
+				onCloseModal={onCloseModal}
+				setValidateMode={setValidateMode}
+			/>
 			<div className="set-login">
 				<p>이미 계정이 있나요?</p>
 				<span

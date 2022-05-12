@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import colors from '@styles/colors'
 
-export const LoginFormContainer = styled.div`
+export const LoginFormContainer = styled.form`
 	.login-input {
 		&__wrapper {
 			position: relative;

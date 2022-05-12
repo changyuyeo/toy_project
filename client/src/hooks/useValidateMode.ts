@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useSelector } from '@store/index'
@@ -7,8 +8,10 @@ const useValidateMode = () => {
 	const dispatch = useDispatch()
 	const { validateMode } = useSelector(state => state.common)
 
-	const setValidateMode = (value: boolean) =>
-		dispatch(setValidateModeAction(value))
+	const setValidateMode = useCallback(
+		(value: boolean) => dispatch(setValidateModeAction(value)),
+		[dispatch]
+	)
 
 	return { validateMode, setValidateMode }
 }
