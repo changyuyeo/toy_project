@@ -1,17 +1,7 @@
-import styled from 'styled-components'
-import Test from '@components/Test'
-
-const Container = styled.div`
-	font-size: 21px;
-	color: gray;
-`
+import AppLayout from '@layouts/AppLayout'
 
 const IndexPage = () => {
-	return (
-		<Container>
-			<Test />
-		</Container>
-	)
+	return <AppLayout>sd</AppLayout>
 }
 
 export default IndexPage
